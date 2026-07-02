@@ -17,7 +17,9 @@ def main():
     rows = {"STK": [], "THM": [], "STM": [], "STR": []}
     for ws in wb.worksheets:
         for r in ws.iter_rows(values_only=True):
-            first = str(r[0] or "")
+            if not r or r[0] is None:
+                continue
+            first = str(r[0])
             for p in rows:
                 if first.startswith(p + "_"):
                     rows[p].append([("" if c is None else str(c).strip()) for c in r])
