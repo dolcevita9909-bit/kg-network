@@ -1,0 +1,27 @@
+name: build
+on:
+  schedule:
+    - cron: '0 22 * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - template.html
+      - build_graph.py
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install openpyxl
+      - run: python build_graph.py
+      - run: |
+          git config user.name github-actions
+          git config user.email actions@users.noreply.github.com
+          git add index.html
+          git commit -m 'auto build' || echo no changes
+          git push
