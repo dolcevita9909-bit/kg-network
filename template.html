@@ -3,44 +3,65 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>대한민국 지식그래프 — 키워드 연결망</title>
+<title>대한민국 지식그래프 v3 — 계층형 연결망 (모바일 지원)</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Pretendard', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; background: #fafaf8; color: #222; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-  header { padding: 10px 16px; background: #fff; border-bottom: 1px solid #e2e0d8; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-  header h1 { font-size: 16px; font-weight: 600; margin-right: 6px; }
-  header .meta { font-size: 12px; color: #888; }
-  #search { padding: 6px 10px; border: 1px solid #d5d3ca; border-radius: 6px; font-size: 13px; width: 200px; }
-  .ctrl { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #555; }
+  body { font-family: 'Pretendard', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif; background: #04050c; color: #e2e4ee; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+  header { padding: 10px 16px; background: #12141c; border-bottom: 1px solid #232734; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  header h1 { font-size: 16px; font-weight: 600; margin-right: 6px; color: #f0f1f7; }
+  header .meta { font-size: 12px; color: #7a7f92; }
+  #search { padding: 6px 10px; border: 1px solid #2e3342; border-radius: 6px; font-size: 13px; width: 200px; background: #1a1d27; color: #e2e4ee; }
+  #search::placeholder { color: #6a6f82; }
+  .ctrl { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #9ba0b4; }
   .ctrl input[type=range] { width: 90px; }
-  .legend { display: flex; gap: 10px; font-size: 12px; color: #555; margin-left: auto; flex-wrap: wrap; }
+  .legend { display: flex; gap: 10px; font-size: 12px; color: #9ba0b4; margin-left: auto; flex-wrap: wrap; }
   .legend span { display: flex; align-items: center; gap: 4px; cursor: pointer; user-select: none; }
   .legend span.off { opacity: 0.3; }
   .dot { width: 11px; height: 11px; border-radius: 50%; display: inline-block; }
   #main { flex: 1; display: flex; min-height: 0; }
   #graph { flex: 1; min-width: 0; cursor: grab; }
   #graph:active { cursor: grabbing; }
-  #panel { width: 330px; border-left: 1px solid #e2e0d8; background: #fff; overflow-y: auto; padding: 16px; }
-  #panel h2 { font-size: 17px; font-weight: 600; margin-bottom: 2px; }
-  #panel .sub { font-size: 12px; color: #888; margin-bottom: 10px; }
-  #panel .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; margin: 0 4px 8px 0; background: #f0efe9; color: #555; }
-  #panel .def { font-size: 13px; line-height: 1.6; color: #444; background: #f7f6f1; border-radius: 8px; padding: 10px; margin-bottom: 14px; }
-  #panel h3 { font-size: 13px; font-weight: 600; color: #666; margin: 12px 0 6px; }
-  .conn { padding: 8px 10px; border: 1px solid #eceae2; border-radius: 8px; margin-bottom: 6px; cursor: pointer; transition: background 0.15s; }
-  .conn:hover { background: #f5f4ee; }
-  .conn .cname { font-size: 13px; font-weight: 600; }
-  .conn .crole { font-size: 11px; color: #888; }
-  .conn .cwhy { font-size: 11.5px; color: #666; margin-top: 3px; line-height: 1.45; }
-  .score { float: right; font-size: 11px; font-weight: 600; color: #d64541; }
-  .hint { font-size: 12.5px; color: #999; line-height: 1.7; }
+  #panel { width: 330px; border-left: 1px solid #232734; background: #12141c; overflow-y: auto; padding: 16px; }
+  #panel h2 { font-size: 17px; font-weight: 600; margin-bottom: 2px; color: #f0f1f7; }
+  #panel .sub { font-size: 12px; color: #7a7f92; margin-bottom: 10px; }
+  #panel .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; margin: 0 4px 8px 0; background: #222636; color: #aeb3c9; }
+  #panel .def { font-size: 13px; line-height: 1.6; color: #c3c7d8; background: #1a1d29; border-radius: 8px; padding: 10px; margin-bottom: 14px; }
+  #panel h3 { font-size: 13px; font-weight: 600; color: #9ba0b4; margin: 12px 0 6px; }
+  .conn { padding: 8px 10px; border: 1px solid #262b3a; border-radius: 8px; margin-bottom: 6px; cursor: pointer; transition: background 0.15s; }
+  .conn:hover { background: #1c2030; }
+  .conn .cname { font-size: 13px; font-weight: 600; color: #e2e4ee; }
+  .conn .crole { font-size: 11px; color: #7a7f92; }
+  .conn .cwhy { font-size: 11.5px; color: #9ba0b4; margin-top: 3px; line-height: 1.45; }
+  .score { float: right; font-size: 11px; font-weight: 600; color: #b98aff; }
+  .hint { font-size: 12.5px; color: #6a6f82; line-height: 1.7; }
   #tooltip { position: absolute; pointer-events: none; background: rgba(30,30,30,0.9); color: #fff; font-size: 12px; padding: 5px 9px; border-radius: 6px; opacity: 0; transition: opacity 0.1s; max-width: 240px; z-index: 10; }
-  button.reset { padding: 5px 10px; border: 1px solid #d5d3ca; background: #fff; border-radius: 6px; font-size: 12px; cursor: pointer; color: #555; }
-  button.reset:hover { background: #f5f4ee; }
+  button.reset { padding: 5px 10px; border: 1px solid #2e3342; background: #1a1d27; border-radius: 6px; font-size: 12px; cursor: pointer; color: #aeb3c9; }
+  button.reset:hover { background: #222636; }
+  @keyframes twinkle { 0%,100% { opacity: 0.1; } 50% { opacity: 0.85; } }
+  .twinkle { animation: twinkle 5s ease-in-out infinite; }
+  circle.star { filter: drop-shadow(0 0 5px currentColor); }
+  html, body { overscroll-behavior: none; }
+  #graph { touch-action: none; }
+  .sheethandle { display: none; }
+  @media (max-width: 768px) {
+    header { gap: 8px; padding: 8px 12px; }
+    header h1 { font-size: 14px; }
+    #search { flex: 1; min-width: 120px; font-size: 16px; }
+    .legend { margin-left: 0; width: 100%; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 2px; }
+    .legend span { flex-shrink: 0; }
+    button.reset { padding: 8px 12px; }
+    #panel { position: fixed; left: 0; right: 0; bottom: 0; width: 100%; height: 55%; border-left: none; border-top: 1px solid #2a3054; border-radius: 16px 16px 0 0; transform: translateY(105%); transition: transform 0.25s ease; z-index: 20; box-shadow: 0 -8px 30px rgba(0,0,0,0.5); }
+    #panel.active { transform: translateY(calc(100% - 64px)); }
+    #panel.active.open { transform: translateY(0); }
+    .sheethandle { display: block; width: 44px; height: 5px; border-radius: 3px; background: #3a4060; margin: 2px auto 12px; cursor: pointer; }
+    .conn { padding: 12px; }
+    circle.star { filter: none; }
+  }
 </style>
 </head>
 <body>
 <header>
-  <h1>대한민국 지식그래프</h1>
+  <h1>대한민국 지식그래프 <span style="color:#7a7f92;font-weight:400">v3</span></h1>
   <span class="meta" id="meta"></span>
   <input id="search" list="nodelist" placeholder="키워드·종목 검색…">
   <datalist id="nodelist"></datalist>
@@ -66,13 +87,17 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script>
 const DATA = __DATA__;
-const COLOR = { System: '#3d3d3d', Theme: '#d64541', SubTheme: '#b8b6ad', Detail: '#8a8880', Stock: '#27ae60' };
+const COLOR = { System: '#14286e', Theme: '#4263eb', SubTheme: '#5f3dc4', Detail: '#9775fa', Stock: '#e5bcff' };
 const LABEL = { System: '시스템', Theme: '테마', SubTheme: '서브테마', Detail: '세부테마', Stock: '종목' };
+const RANK = { System: 0, Theme: 1, SubTheme: 2, Detail: 3, Stock: 4 };
+const LEVELS = ['System', 'Theme', 'SubTheme', 'Detail', 'Stock'];
+const FR = { System: 0.08, Theme: 0.32, SubTheme: 0.54, Detail: 0.76, Stock: 1.0 };
+const isMobile = matchMedia('(max-width: 768px)').matches || ('ontouchstart' in window && Math.min(screen.width, screen.height) < 820);
 const visible = { System: true, Theme: true, SubTheme: true, Detail: true, Stock: true };
 let minDeg = 1, selected = null;
 
 const nodeById = new Map(DATA.nodes.map(d => [d.id, d]));
-DATA.links.forEach(l => { l.source = l.s; l.target = l.t; });
+DATA.links.forEach((l, i) => { l.source = l.s; l.target = l.t; l.gid = i; });
 const adj = new Map();
 DATA.links.forEach(l => {
   if (!adj.has(l.s)) adj.set(l.s, []);
@@ -98,20 +123,61 @@ Object.keys(COLOR).forEach(k => {
 const svg = d3.select('#graph');
 const W = () => document.getElementById('graph').clientWidth;
 const H = () => document.getElementById('graph').clientHeight;
+const defs = svg.append('defs');
+Object.entries(COLOR).forEach(([k, c]) => {
+  const rg = defs.append('radialGradient').attr('id', 'ng-' + k);
+  rg.append('stop').attr('offset', '0%').attr('stop-color', '#ffffff');
+  rg.append('stop').attr('offset', '38%').attr('stop-color', c);
+  rg.append('stop').attr('offset', '100%').attr('stop-color', d3.color(c).darker(1.1).formatHex());
+});
+['#16307e', '#5f3dc4', '#2a1060'].forEach((c, i) => {
+  const ng = defs.append('radialGradient').attr('id', 'neb' + i);
+  ng.append('stop').attr('offset', '0%').attr('stop-color', c).attr('stop-opacity', 0.32);
+  ng.append('stop').attr('offset', '100%').attr('stop-color', c).attr('stop-opacity', 0);
+});
+const bg = svg.insert('g', ':first-child');
+bg.append('circle').attr('cx', W() * 0.22).attr('cy', H() * 0.28).attr('r', Math.max(W(), H()) * 0.45).attr('fill', 'url(#neb0)');
+bg.append('circle').attr('cx', W() * 0.78).attr('cy', H() * 0.72).attr('r', Math.max(W(), H()) * 0.5).attr('fill', 'url(#neb1)');
+bg.append('circle').attr('cx', W() * 0.6).attr('cy', H() * 0.1).attr('r', Math.max(W(), H()) * 0.3).attr('fill', 'url(#neb2)');
+for (let i = 0; i < (isMobile ? 110 : 230); i++) {
+  bg.append('circle')
+    .attr('cx', Math.random() * W()).attr('cy', Math.random() * H())
+    .attr('r', Math.random() * 1.3 + 0.2)
+    .attr('fill', i % 7 === 0 ? '#ffd9a0' : '#cdd6ff')
+    .attr('class', 'twinkle')
+    .style('animation-delay', (Math.random() * 6) + 's')
+    .style('animation-duration', (3 + Math.random() * 5) + 's');
+}
 const g = svg.append('g');
 const linkG = g.append('g'), nodeG = g.append('g'), textG = g.append('g');
+let gradSel = null;
 const zoom = d3.zoom().scaleExtent([0.15, 6]).on('zoom', e => { g.attr('transform', e.transform); updateLabels(e.transform.k); });
 svg.call(zoom);
 svg.on('dblclick.zoom', null);
 svg.on('dblclick', () => select(null));
+svg.on('click', () => select(null));
 
+const R = () => Math.min(W(), H()) / 2 - 30;
+const ringR = lvl => Math.max(R(), 200) * FR[lvl];
 const sim = d3.forceSimulation()
-  .force('link', d3.forceLink().id(d => d.id).distance(l => 40 + 10 / Math.sqrt(+l.score || 3)).strength(0.25))
-  .force('charge', d3.forceManyBody().strength(d => -40 - d.deg * 6))
-  .force('center', d3.forceCenter(W() / 2, H() / 2))
-  .force('collide', d3.forceCollide(d => r(d) + 2));
+  .force('link', d3.forceLink().id(d => d.id).strength(0.012).distance(80))
+  .force('charge', d3.forceManyBody().strength(-5))
+  .force('radial', d3.forceRadial(d => ringR(d.level) * (d.rj || 1), W() / 2, H() / 2).strength(1))
+  .force('collide', d3.forceCollide(d => r(d) + 1.5));
+const ringG = g.insert('g', ':first-child');
+function drawRings() {
+  ringG.selectAll('*').remove();
+  const cx = W() / 2, cy = H() / 2;
+  LEVELS.forEach(l => {
+    ringG.append('circle').attr('cx', cx).attr('cy', cy).attr('r', ringR(l))
+      .attr('fill', 'none').attr('stroke', '#2a3054').attr('stroke-dasharray', '3 6').attr('stroke-opacity', 0.55);
+    ringG.append('text').attr('x', cx).attr('y', cy - ringR(l) - 7)
+      .attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', '#6a7092').text(LABEL[l]);
+  });
+}
+drawRings();
 
-function r(d) { return 3.5 + Math.min(Math.sqrt(d.deg) * 1.8, 16); }
+function r(d) { return 3 + Math.min(Math.sqrt(d.deg) * 1.5, 12); }
 
 let node, link, label, curNodes = [], curLinks = [];
 function refresh() {
@@ -119,14 +185,23 @@ function refresh() {
   const ids = new Set(curNodes.map(d => d.id));
   curLinks = DATA.links.filter(l => ids.has(l.s) && ids.has(l.t));
 
+  const grad = defs.selectAll('linearGradient').data(curLinks, l => l.gid);
+  grad.exit().remove();
+  const gradEnter = grad.enter().append('linearGradient')
+    .attr('id', l => 'lg' + l.gid).attr('gradientUnits', 'userSpaceOnUse');
+  gradEnter.append('stop').attr('offset', '0%').attr('stop-color', l => COLOR[(nodeById.get(l.s) || {}).level] || '#5f3dc4');
+  gradEnter.append('stop').attr('offset', '100%').attr('stop-color', l => COLOR[(nodeById.get(l.t) || {}).level] || '#5f3dc4');
+  gradSel = gradEnter.merge(grad);
+
   link = linkG.selectAll('line').data(curLinks, l => l.s + '|' + l.t + '|' + l.role);
   link.exit().remove();
-  link = link.enter().append('line').attr('stroke', '#cfcdc4').attr('stroke-width', 1).attr('stroke-opacity', 0.55).merge(link);
+  link = link.enter().append('line').attr('stroke', l => 'url(#lg' + l.gid + ')').attr('stroke-width', 1).attr('stroke-opacity', 0.55).merge(link);
 
   node = nodeG.selectAll('circle').data(curNodes, d => d.id);
   node.exit().remove();
   node = node.enter().append('circle')
-    .attr('r', r).attr('fill', d => COLOR[d.level]).attr('stroke', '#fff').attr('stroke-width', 1.2)
+    .attr('r', r).attr('fill', d => 'url(#ng-' + d.level + ')').attr('class', 'star').style('color', d => COLOR[d.level])
+    .attr('stroke', 'rgba(0,0,0,0)').attr('stroke-width', isMobile ? 14 : 0)
     .style('cursor', 'pointer')
     .on('click', (e, d) => { e.stopPropagation(); select(d); })
     .on('mousemove', (e, d) => {
@@ -144,10 +219,23 @@ function refresh() {
   label = textG.selectAll('text').data(curNodes, d => d.id);
   label.exit().remove();
   label = label.enter().append('text')
-    .text(d => d.name).attr('font-size', 11).attr('fill', '#333')
+    .text(d => d.name).attr('font-size', 11).attr('fill', '#c9cce0')
     .attr('text-anchor', 'middle').attr('pointer-events', 'none')
     .merge(label);
 
+  const cx = W() / 2, cy = H() / 2;
+  const byLvl = {};
+  curNodes.forEach(d => { (byLvl[d.level] = byLvl[d.level] || []).push(d); });
+  Object.entries(byLvl).forEach(([lvl, arr]) => {
+    arr.forEach((d, i) => {
+      if (d.rj === undefined) d.rj = 0.92 + Math.random() * 0.16;
+      if (d.x === undefined) {
+        const a = (i / arr.length) * Math.PI * 2 + RANK[lvl] * 0.7;
+        const rr = ringR(lvl) * d.rj;
+        d.x = cx + rr * Math.cos(a); d.y = cy + rr * Math.sin(a);
+      }
+    });
+  });
   sim.nodes(curNodes).on('tick', tick);
   sim.force('link').links(curLinks);
   sim.alpha(0.6).restart();
@@ -157,31 +245,43 @@ function refresh() {
 
 function tick() {
   link.attr('x1', l => l.source.x).attr('y1', l => l.source.y).attr('x2', l => l.target.x).attr('y2', l => l.target.y);
+  if (gradSel) gradSel.attr('x1', l => l.source.x).attr('y1', l => l.source.y).attr('x2', l => l.target.x + 0.01).attr('y2', l => l.target.y + 0.01);
   node.attr('cx', d => d.x).attr('cy', d => d.y);
   label.attr('x', d => d.x).attr('y', d => d.y - r(d) - 3);
 }
 
-function updateLabels(k) {
-  if (!label) return;
-  label.attr('display', d => (selected && (d === selected || isNeighbor(d))) || d.deg >= (k > 1.8 ? 1 : k > 0.9 ? 8 : 18) ? null : 'none');
+let selKeep = new Set(), selLinks = new Set();
+function computePath(d) {
+  const keep = new Set([d.id]); const lks = new Set();
+  (adj.get(d.id) || []).forEach(a => { keep.add(a.other); lks.add(a.link.gid); });
+  const stack = [...keep]; const seen = new Set(stack);
+  while (stack.length) {
+    const id = stack.pop(); const n = nodeById.get(id); if (!n) continue;
+    (adj.get(id) || []).forEach(a => {
+      const m = nodeById.get(a.other); if (!m) return;
+      if (RANK[m.level] < RANK[n.level]) {
+        keep.add(m.id); lks.add(a.link.gid);
+        if (!seen.has(m.id)) { seen.add(m.id); stack.push(m.id); }
+      }
+    });
+  }
+  return { keep, lks };
 }
 
-function isNeighbor(d) {
-  if (!selected) return false;
-  return (adj.get(selected.id) || []).some(a => a.other === d.id);
+function updateLabels(k) {
+  if (!label) return;
+  label.attr('display', d => selected ? (selKeep.has(d.id) ? null : 'none') : (d.deg >= (k > 1.8 ? 1 : k > 0.9 ? 8 : 18) ? null : 'none'));
 }
 
 function applyHighlight() {
   if (!node) return;
   if (!selected) {
-    node.attr('opacity', 1); link.attr('stroke', '#cfcdc4').attr('stroke-opacity', 0.55).attr('stroke-width', 1);
+    node.attr('opacity', 1); link.attr('stroke-opacity', 0.55).attr('stroke-width', 1);
     return;
   }
-  const nb = new Set((adj.get(selected.id) || []).map(a => a.other)); nb.add(selected.id);
-  node.attr('opacity', d => nb.has(d.id) ? 1 : 0.12);
-  link.attr('stroke', l => (l.s === selected.id || l.t === selected.id) ? '#d64541' : '#cfcdc4')
-      .attr('stroke-opacity', l => (l.s === selected.id || l.t === selected.id) ? 0.9 : 0.08)
-      .attr('stroke-width', l => (l.s === selected.id || l.t === selected.id) ? 1.6 : 1);
+  node.attr('opacity', d => selKeep.has(d.id) ? 1 : 0.06);
+  link.attr('stroke-opacity', l => selLinks.has(l.gid) ? 0.95 : 0.03)
+      .attr('stroke-width', l => selLinks.has(l.gid) ? 2 : 1);
 }
 
 function select(d) {
@@ -190,32 +290,44 @@ function select(d) {
   updateLabels(d3.zoomTransform(svg.node()).k);
   const p = document.getElementById('panel');
   if (!d) {
+    selKeep = new Set(); selLinks = new Set();
+    p.classList.remove('active', 'open');
     p.innerHTML = '<h2>키워드 연결망</h2><p class="sub">노드를 클릭하세요</p><p class="hint">노드 클릭 → 관련 정보 표시<br>빈 곳 더블클릭 → 선택 해제</p>';
     return;
   }
-  const conns = (adj.get(d.id) || []).map(a => ({ n: nodeById.get(a.other), l: a.link }))
-    .filter(c => c.n).sort((x, y) => (+y.l.score || 0) - (+x.l.score || 0));
+  const res = computePath(d); selKeep = res.keep; selLinks = res.lks;
+  applyHighlight(); updateLabels(d3.zoomTransform(svg.node()).k);
+  const directLink = new Map();
+  (adj.get(d.id) || []).forEach(a => directLink.set(a.other, a.link));
   let html = `<h2>${esc(d.name)}</h2><p class="sub">${esc(d.en || d.id)}</p>`;
-  html += `<span class="badge" style="background:${COLOR[d.level]}22;color:${COLOR[d.level]}">${LABEL[d.level]}</span>`;
+  html += `<span class="badge" style="background:${COLOR[d.level]}33;color:${d.level==='Stock'?'#e5bcff':'#aeb3c9'}">${LABEL[d.level]}</span>`;
   html += `<span class="badge">연결 ${d.deg}</span>`;
   if (d.system) html += `<span class="badge">${esc(d.system)}</span>`;
-  if (d.funds) html += `<span class="badge">퍸입펀드 ${esc(d.funds)}</span>`;
+  if (d.funds) html += `<span class="badge">편입펀드 ${esc(d.funds)}</span>`;
   if (d.def) html += `<div class="def">${esc(d.def)}</div>`;
-  html += `<h3>연결된 노드 ${conns.length}개</h3>`;
-  conns.forEach((c, i) => {
-    html += `<div class="conn" data-i="${i}">
-      <span class="score">${c.l.score ? c.l.score + '점' : ''}</span>
-      <div class="cname"><span class="dot" style="background:${COLOR[c.n.level]};margin-right:5px"></span>${esc(c.n.name)}</div>
-      <div class="crole">${esc(c.l.role || '')}</div>
-      ${c.l.why ? `<div class="cwhy">${esc(c.l.why)}</div>` : ''}
-    </div>`;
+  const flat = [];
+  LEVELS.forEach(lvl => {
+    const items = [...selKeep].map(id => nodeById.get(id))
+      .filter(n => n && n.level === lvl && n.id !== d.id)
+      .sort((a, b) => { const la = directLink.get(a.id), lb = directLink.get(b.id); return (+(lb && lb.score) || 0) - (+(la && la.score) || 0); });
+    if (!items.length) return;
+    html += `<h3>${LABEL[lvl]} ${items.length}개</h3>`;
+    items.forEach(n => {
+      const l = directLink.get(n.id); const i = flat.length; flat.push(n);
+      html += `<div class="conn" data-i="${i}">
+        <span class="score">${l && l.score ? l.score + '점' : ''}</span>
+        <div class="cname"><span class="dot" style="background:${COLOR[n.level]};margin-right:5px"></span>${esc(n.name)}</div>
+        ${l && l.role ? `<div class="crole">${esc(l.role)}</div>` : ''}
+        ${l && l.why ? `<div class="cwhy">${esc(l.why)}</div>` : ''}
+      </div>`;
+    });
   });
-  p.innerHTML = html;
+  p.innerHTML = '<div class="sheethandle"></div>' + html;
   p.scrollTop = 0;
-  p.querySelectorAll('.conn').forEach(el => el.onclick = () => {
-    const c = conns[+el.dataset.i];
-    focusNode(c.n);
-  });
+  p.classList.add('active', 'open');
+  const hd = p.querySelector('.sheethandle');
+  if (hd) hd.onclick = () => p.classList.toggle('open');
+  p.querySelectorAll('.conn').forEach(el => el.onclick = () => focusNode(flat[+el.dataset.i]));
 }
 
 function focusNode(n) {
@@ -241,9 +353,11 @@ document.getElementById('resetBtn').onclick = () => {
   svg.transition().duration(400).call(zoom.transform, d3.zoomIdentity);
   refresh(); select(null);
 };
-window.addEventListener('resize', () => sim.force('center', d3.forceCenter(W() / 2, H() / 2)).alpha(0.3).restart());
+window.addEventListener('resize', () => { sim.force('radial', d3.forceRadial(d => ringR(d.level) * (d.rj || 1), W() / 2, H() / 2).strength(1)); drawRings(); sim.alpha(0.3).restart(); });
 
 refresh();
+const fitK = (Math.min(W(), H()) / 2 - 16) / ringR('Stock');
+if (fitK < 1) svg.call(zoom.transform, d3.zoomIdentity.translate(W() / 2 * (1 - fitK), H() / 2 * (1 - fitK)).scale(fitK));
 </script>
 </body>
 </html>
