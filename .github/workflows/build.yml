@@ -7,6 +7,8 @@ on:
     paths:
       - template.html
       - build_graph.py
+      - template_bond.html
+      - build_bond.py
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -19,9 +21,12 @@ jobs:
           python-version: '3.12'
       - run: pip install openpyxl
       - run: python build_graph.py
+        continue-on-error: true
+      - run: python build_bond.py
+        continue-on-error: true
       - run: |
           git config user.name github-actions
           git config user.email actions@users.noreply.github.com
-          git add index.html
+          git add index.html bond/index.html || true
           git commit -m 'auto build' || echo no changes
           git push
